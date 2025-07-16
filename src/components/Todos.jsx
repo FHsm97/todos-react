@@ -1,14 +1,17 @@
 import { useState } from "react";
 import TodoList from "./TodoList";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Todos() {
 
     const [todos, setTodos] = useState([
         {
+            id:uuidv4(),
             title: 'go to school and read book!',
             status: false
         },
         {
+            id:uuidv4(),
             title: 'go to gym!',
             status: true
         }
@@ -30,6 +33,7 @@ export default function Todos() {
                 ...todos,
                 {
                     // title:event.target.value,
+                    id:uuidv4(),
                     title:newTodoTitle,
                     status:false
                 }
@@ -41,9 +45,22 @@ export default function Todos() {
             
 
         }
-        // console.log(event.target.value);
+        // console.log(event.target.value);      
+    }
+
+    const deleteTodoHandler=(todo)=>{
+        // console.log('delete todo',todo);
+        // setTodos([])//همه پاک میشود
+
+        let newTodos=todos.filter((todoItem)=>{
+            return todo.id!=todoItem.id
+
+        })
+        // console.log(newTodos);
+        setTodos(newTodos);
         
         
+
     }
 
     return (
@@ -59,7 +76,7 @@ export default function Todos() {
                         value={newTodoTitle}
                         className="w-full px-2 py-3 border rounded outline-none border-grey-600" />
                 </div>
-                <TodoList todos={todos} />
+                <TodoList todos={todos} deleteTodo={deleteTodoHandler} />
             </div>
         </div>
     )

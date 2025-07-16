@@ -14,24 +14,30 @@ export default function Todos() {
         }
     ])
 
+    const [newTodoTitle,setNewTodoTitle]=useState("")
+
     const onInputNewTodoChanageHandler = (event) => {
         // console.log(event);
+        setNewTodoTitle(event.target.value)
 
     }
 
     const addNewTodoHandler=(event)=>{
         // console.log(event.key);
-        if(event.key=='Enter'){
-            console.log('add a new todo');
+        if(event.key=='Enter'&& newTodoTitle!=""){
+            // console.log('add a new todo');
             setTodos([
                 ...todos,
                 {
-                    title:event.target.value,
+                    // title:event.target.value,
+                    title:newTodoTitle,
                     status:false
                 }
             ])
 
-            event.target.value='';
+            setNewTodoTitle("")
+
+            // event.target.value='';
             
 
         }
@@ -50,6 +56,7 @@ export default function Todos() {
                     <input type="text" placeholder="What needs to be done today?"
                         onChange={onInputNewTodoChanageHandler}
                         onKeyDown={addNewTodoHandler}
+                        value={newTodoTitle}
                         className="w-full px-2 py-3 border rounded outline-none border-grey-600" />
                 </div>
                 <TodoList todos={todos} />

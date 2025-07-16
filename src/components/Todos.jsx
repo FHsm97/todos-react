@@ -58,9 +58,26 @@ export default function Todos() {
         })
         // console.log(newTodos);
         setTodos(newTodos);
-        
+    }
+    const toggleTodoStatusHandler=(todo)=>{
+        // console.log('toggle todo',todo);
+        // let changeTodo=todo;
+        // changeTodo.status=!todo.status
+        // console.log(changeTodo);
         
 
+        let newTodos=todos.map((todoItem)=>{
+            if(todo.id==todoItem.id){
+                todoItem.status=!todoItem.status
+                
+
+            }
+            return todoItem;
+        })
+
+        // console.log(newTodos);
+        
+        setTodos(newTodos);
     }
 
     return (
@@ -76,7 +93,7 @@ export default function Todos() {
                         value={newTodoTitle}
                         className="w-full px-2 py-3 border rounded outline-none border-grey-600" />
                 </div>
-                <TodoList todos={todos} deleteTodo={deleteTodoHandler} />
+                <TodoList todos={todos} deleteTodo={deleteTodoHandler} toggleTodo={toggleTodoStatusHandler} />
             </div>
         </div>
     )

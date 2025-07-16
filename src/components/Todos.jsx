@@ -1,6 +1,18 @@
+import { useState } from "react";
 import TodoList from "./TodoList";
 
 export default function Todos() {
+
+    const [todos, setTodos] = useState([
+        {
+            title: 'go to school and read book!',
+            status: false
+        },
+        {
+            title: 'go to gym!',
+            status: true
+        }
+    ])
 
     return (
         <div className="flex items-center justify-center h-screen">
@@ -12,7 +24,7 @@ export default function Todos() {
                     <input type="text" placeholder="What needs to be done today?"
                         className="w-full px-2 py-3 border rounded outline-none border-grey-600" />
                 </div>
-                <TodoList/>
+                <TodoList todos={todos} />
             </div>
         </div>
     )

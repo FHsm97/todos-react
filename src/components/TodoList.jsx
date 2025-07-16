@@ -1,10 +1,13 @@
 import TodoListItem from "./TodoListItem";
 
-export default function TodoList() {
+export default function TodoList({todos}) {
+    // console.log(todos);
+    
     return (
         <ul className="list-reset">
-            <TodoListItem/>
-            <TodoListItem/>
+            {todos.map((todo,index)=><TodoListItem key={index} todo={todo}/>)}
+            {/* <TodoListItem/>
+            <TodoListItem/> */}
             {/* <li className="relative flex items-center justify-between px-2 py-6 border-b">
                 <div>
                     <input type="checkbox" checked onChange={() => { }} className="" />

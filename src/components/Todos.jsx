@@ -14,6 +14,32 @@ export default function Todos() {
         }
     ])
 
+    const onInputNewTodoChanageHandler = (event) => {
+        // console.log(event);
+
+    }
+
+    const addNewTodoHandler=(event)=>{
+        // console.log(event.key);
+        if(event.key=='Enter'){
+            console.log('add a new todo');
+            setTodos([
+                ...todos,
+                {
+                    title:event.target.value,
+                    status:false
+                }
+            ])
+
+            event.target.value='';
+            
+
+        }
+        // console.log(event.target.value);
+        
+        
+    }
+
     return (
         <div className="flex items-center justify-center h-screen">
             <div className="w-full px-4 py-8 mx-auto shadow lg:w-1/3  bg-white">
@@ -22,6 +48,8 @@ export default function Todos() {
                 </div>
                 <div className="relative">
                     <input type="text" placeholder="What needs to be done today?"
+                        onChange={onInputNewTodoChanageHandler}
+                        onKeyDown={addNewTodoHandler}
                         className="w-full px-2 py-3 border rounded outline-none border-grey-600" />
                 </div>
                 <TodoList todos={todos} />

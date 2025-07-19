@@ -2,8 +2,17 @@ import { useState } from "react";
 import DeleteIcon from "./icons/DeleteIcon";
 import EditIcon from "./icons/EditIcon";
 
-export default function TodoListItem({ todo, deleteTodo, toggleTodo }) {
+export default function TodoListItem({ todo, deleteTodo, toggleTodo,editTodoTitle }) {
     const [editMode, setEditMode] = useState(false);
+    const editTodoHandler=(event)=>{
+        if (event.key=='Enter') {
+            // console.log(event.target.value);
+            editTodoTitle(todo,event.target.value);
+            setEditMode(false)
+            
+        }
+        
+    }
 
 
 
@@ -20,7 +29,7 @@ export default function TodoListItem({ todo, deleteTodo, toggleTodo }) {
                 editMode
                     ?
                     <div className="w-full flex items-center">
-                        <input type="text" value={todo?.title} onChange={() => { }} className="w-full px-4 py-2 border border-gray-200 rounded" />
+                        <input type="text" defaultValue={todo?.title} onChange={() => { }} onKeyDown={editTodoHandler} className="w-full px-4 py-2 border border-gray-200 rounded" />
                         <DeleteIcon className="ml-2" onClick={() => setEditMode(false)} />
                     </div>
                     :

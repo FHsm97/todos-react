@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "./icons/DeleteIcon";
 import EditIcon from "./icons/EditIcon";
 
@@ -14,16 +14,22 @@ export default function TodoListItem({ todo, deleteTodo, toggleTodo,editTodoTitl
         
     }
 
+    useEffect(()=>{
+        console.log(`the component created! =>${todo.title}`);//هنگام ایجاد شدن کامپوننت اجرا می شود
+
+        return ()=>{
+            console.log(`the component deleted! =>${todo.title}`);//زمان حذف کردن کامپوننت اجرا می شود
+            
+        }
+
+        
+    },[])
 
 
 
     return (
         <li className="relative flex items-center justify-between px-2 py-6 border-b">
             {/*  */}
-
-
-
-
 
             {
                 editMode

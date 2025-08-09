@@ -6,99 +6,103 @@ import NewTodoInput from "./NewTodoInput";
 export default function Todos() {
 
     const [todos, setTodos] = useState([
-        {
-            id:uuidv4(),
-            title: 'go to school and read book!',
-            status: false
-        },
-        {
-            id:uuidv4(),
-            title: 'go to gym!',
-            status: true
-        }
+        // {
+        //     id: uuidv4(),
+        //     title: 'go to school and read book!',
+        //     status: false
+        // },
+        // {
+        //     id: uuidv4(),
+        //     title: 'go to gym!',
+        //     status: true
+        // }
     ])
 
-    
 
-    
 
-    const addNewTodoHandler=(todoTitle)=>{
-            setTodos([
-                ...todos,
-                {
-                    id:uuidv4(),
-                    title:todoTitle,
-                    status:false
-                }
-            ])
 
-        }
-             
-    
 
-    const deleteTodoHandler=(todo)=>{
+    const addNewTodoHandler = (todoTitle) => {
+
+        let newTodos = [
+            ...todos,
+            {
+                id: uuidv4(),
+                title: todoTitle,
+                status: false
+            }
+        ];
+        setTodos(newTodos)
+
+        // localStorage.setItem('todos-list', JSON.stringify(newTodos)) //set in localstorage
+
+    }
+
+
+
+    const deleteTodoHandler = (todo) => {
         // console.log('delete todo',todo);
         // setTodos([])//همه پاک میشود
 
-        let newTodos=todos.filter((todoItem)=>{
-            return todo.id!=todoItem.id
+        let newTodos = todos.filter((todoItem) => {
+            return todo.id != todoItem.id
 
         })
         // console.log(newTodos);
         setTodos(newTodos);
     }
-    const toggleTodoStatusHandler=(todo)=>{
+    const toggleTodoStatusHandler = (todo) => {
         // console.log('toggle todo',todo);
         // let changeTodo=todo;
         // changeTodo.status=!todo.status
         // console.log(changeTodo);
-        
 
-        let newTodos=todos.map((todoItem)=>{
-            if(todo.id==todoItem.id){
-                todoItem.status=!todoItem.status
-                
+
+        let newTodos = todos.map((todoItem) => {
+            if (todo.id == todoItem.id) {
+                todoItem.status = !todoItem.status
+
 
             }
             return todoItem;
         })
 
         // console.log(newTodos);
-        
+
         setTodos(newTodos);
     }
 
 
 
 
-    const editTodoTitleHandler=(todo,newTitleValue)=>{
+    const editTodoTitleHandler = (todo, newTitleValue) => {
 
-        let newTodos=todos.map((todoItem)=>{
-            if(todo.id==todoItem.id){
-                todoItem.title=newTitleValue
-                
+        let newTodos = todos.map((todoItem) => {
+            if (todo.id == todoItem.id) {
+                todoItem.title = newTitleValue
+
 
             }
             return todoItem;
         })
-        
+
         setTodos(newTodos);
     }
 
 
-
+    useEffect(()=>{
+        setTodos(JSON.parse(localStorage.getItem('todos-list'))??[])
+    },[])
 
 
     //lifecycle
     // console.log('x'); //با هر تغییر اجرا میشود
 
-    useEffect(()=>{
+    useEffect(() => {
+        // console.log('todos update!');
+        localStorage.setItem('todos-list', JSON.stringify(todos))
+    }, [todos])
 
-        console.log('todos update!');
-        
-
-    },[todos])
-    
 
     return (
         <div className="flex items-center justify-center h-screen">
@@ -108,8 +112,8 @@ export default function Todos() {
                 </div>
 
 
-                <NewTodoInput addTodo={addNewTodoHandler}/>
-                
+                <NewTodoInput addTodo={addNewTodoHandler} />
+
 
 
                 <TodoList todos={todos} deleteTodo={deleteTodoHandler} toggleTodo={toggleTodoStatusHandler} editTodoTitle={editTodoTitleHandler} />

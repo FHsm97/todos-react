@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TodoList from "./TodoList";
 import { v4 as uuidv4 } from 'uuid';
 import NewTodoInput from "./NewTodoInput";
+import { toast } from "react-toastify";
 
 export default function Todos() {
 
@@ -42,6 +43,9 @@ export default function Todos() {
             ])
 
 
+            toast.success("todo created!")
+
+
         } catch (error) {
             console.log(error);
 
@@ -68,8 +72,13 @@ export default function Todos() {
             // console.log(newTodos);
             setTodos(newTodos);
 
+            toast.success('the todo deleted!')
+
         }
         // show me an error
+        let message=await res.json();
+        toast.error(message)
+        
 
     }
 
@@ -100,7 +109,7 @@ export default function Todos() {
             setTodos(newTodos);
         }
         // show me an error
-
+        
     }
 
 
@@ -118,7 +127,7 @@ export default function Todos() {
     const editTodoTitleHandler = async(todo, newTitleValue) => {
 
 
-        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
+        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todo/${todo?.id}`, {
             method: 'put',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
@@ -140,6 +149,8 @@ export default function Todos() {
             
         }
         //show me an error
+
+        
 
         
     }

@@ -5,79 +5,129 @@ import NewTodoInput from "./NewTodoInput";
 
 export default function Todos() {
 
-    const [todos, setTodos] = useState([
-        // {
-        //     id: uuidv4(),
-        //     title: 'go to school and read book!',
-        //     status: false
-        // },
-        // {
-        //     id: uuidv4(),
-        //     title: 'go to gym!',
-        //     status: true
-        // }
-    ])
+    const [todos, setTodos] = useState([])
 
 
 
 
 
-    const addNewTodoHandler = (todoTitle) => {
+    const addNewTodoHandler = async (todoTitle) => {
 
-        let newTodos = [
-            ...todos,
-            {
-                id: uuidv4(),
-                title: todoTitle,
-                status: false
-            }
-        ];
-        setTodos(newTodos)
+        let newTodo =
+        {
+            title: todoTitle,
+            status: false
+        }
+            ;
+        // setTodos(newTodos)
 
         // localStorage.setItem('todos-list', JSON.stringify(newTodos)) //set in localstorage
 
+
+        try {
+
+            let res = await fetch("https://68a198366f8c17b8f5da3e00.mockapi.io/todos", {
+                method: 'post',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(newTodo)
+            })
+
+            let todoData = await res.json();
+
+            // console.log(res);
+
+            setTodos([
+                ...todos,
+                todoData
+            ])
+
+
+        } catch (error) {
+            console.log(error);
+
+
+        }
+
     }
 
 
 
-    const deleteTodoHandler = (todo) => {
-        // console.log('delete todo',todo);
-        // setTodos([])//همه پاک میشود
+    const deleteTodoHandler = async (todo) => {
 
-        let newTodos = todos.filter((todoItem) => {
-            return todo.id != todoItem.id
 
+        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
+            method: 'DELETE',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify()
         })
-        // console.log(newTodos);
-        setTodos(newTodos);
+        if (res.ok) {
+            let newTodos = todos.filter((todoItem) => {
+                return todo.id != todoItem.id
+
+            })
+            // console.log(newTodos);
+            setTodos(newTodos);
+
+        }
+        // show me an error
+
     }
-    const toggleTodoStatusHandler = (todo) => {
-        // console.log('toggle todo',todo);
-        // let changeTodo=todo;
-        // changeTodo.status=!todo.status
-        // console.log(changeTodo);
 
 
-        let newTodos = todos.map((todoItem) => {
-            if (todo.id == todoItem.id) {
-                todoItem.status = !todoItem.status
+    
+    const toggleTodoStatusHandler = async (todo) => {
 
-
-            }
-            return todoItem;
+        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
+            method: 'put',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+                status: !todo.status
+            })
         })
 
-        // console.log(newTodos);
+        if (res.ok) {
+            let newTodos = todos.map((todoItem) => {
+                if (todo.id == todoItem.id) {
+                    todoItem.status = !todoItem.status
 
-        setTodos(newTodos);
+
+                }
+                return todoItem;
+            })
+
+            // console.log(newTodos);
+
+            setTodos(newTodos);
+        }
+        // show me an error
+
     }
 
 
+    // console.log('toggle todo',todo);
+    // let changeTodo=todo;
+    // changeTodo.status=!todo.status
+    // console.log(changeTodo);
 
 
-    const editTodoTitleHandler = (todo, newTitleValue) => {
 
-        let newTodos = todos.map((todoItem) => {
+
+
+
+
+    const editTodoTitleHandler = async(todo, newTitleValue) => {
+
+
+        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
+            method: 'put',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+                title: newTitleValue
+            })
+        })
+
+        if (res.ok) {
+            let newTodos = todos.map((todoItem) => {
             if (todo.id == todoItem.id) {
                 todoItem.title = newTitleValue
 
@@ -87,21 +137,46 @@ export default function Todos() {
         })
 
         setTodos(newTodos);
+            
+        }
+        //show me an error
+
+        
     }
 
 
-    useEffect(()=>{
-        setTodos(JSON.parse(localStorage.getItem('todos-list'))??[])
-    },[])
+
+    const getTodosFromApi = async () => {
+        try {
+            let res = await fetch("https://68a198366f8c17b8f5da3e00.mockapi.io/todos")
+            let todos = await res.json();
+
+            // console.log(todos);
+            if (res.ok) {
+                setTodos(todos)
+            }
 
 
-    //lifecycle
-    // console.log('x'); //با هر تغییر اجرا میشود
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
 
     useEffect(() => {
-        // console.log('todos update!');
-        localStorage.setItem('todos-list', JSON.stringify(todos))
-    }, [todos])
+        getTodosFromApi();
+        // setTodos(JSON.parse(localStorage.getItem('todos-list'))??[])
+    }, [])
+
+
+    // //lifecycle
+    // // console.log('x'); //با هر تغییر اجرا میشود
+
+    // useEffect(() => {
+    //     // console.log('todos update!');
+    //     localStorage.setItem('todos-list', JSON.stringify(todos))
+    // }, [todos])
 
 
     return (

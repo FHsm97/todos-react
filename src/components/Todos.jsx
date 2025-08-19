@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import NewTodoInput from "./NewTodoInput";
 import { toast } from "react-toastify";
 import todoReducer from "../reducers/todoReducer";
+import { TodoContext } from "../contexts/TodoContext";
 
 export default function Todos() {
 
@@ -56,93 +57,7 @@ export default function Todos() {
 
 
 
-    const deleteTodoHandler = async (todo) => {
 
-
-        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
-            method: 'DELETE',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify()
-        })
-        if (res.ok) {
-
-            todoDispatcher({
-                type:'delete',
-                id:todo.id
-            })
-            
-
-            toast.success('the todo deleted!')
-
-        }
-        // show me an error
-        let message = await res.json();
-        toast.error(message)
-
-
-    }
-
-
-
-    const toggleTodoStatusHandler = async (todo) => {
-
-        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
-            method: 'put',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-                status: !todo.status
-            })
-        })
-
-        if (res.ok) {
-
-            todoDispatcher({
-                type:'toggle-satus',
-                id:todo.id
-            })
-
-        }
-        // show me an error
-
-    }
-
-
-    // console.log('toggle todo',todo);
-    // let changeTodo=todo;
-    // changeTodo.status=!todo.status
-    // console.log(changeTodo);
-
-
-
-
-
-
-
-    const editTodoTitleHandler = async (todo, newTitleValue) => {
-
-
-        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
-            method: 'put',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-                title: newTitleValue
-            })
-        })
-
-        if (res.ok) {
-            todoDispatcher({
-                type:'edit-title',
-                id:todo.id,
-                newTiltle:newTitleValue
-            })
-            
-        }
-        //show me an error
-
-
-
-
-    }
 
 
 
@@ -154,7 +69,7 @@ export default function Todos() {
             // console.log(todos);
             if (res.ok) {
                 todoDispatcher({
-                    type:'initial-todos',
+                    type: 'initial-todos',
                     todos
                 })
             }
@@ -192,9 +107,16 @@ export default function Todos() {
 
                 <NewTodoInput addTodo={addNewTodoHandler} />
 
+                <TodoContext.Provider value={{
+                    todos,
+                    todoDispatcher
+                }}>
+                    <TodoList />
+                </TodoContext.Provider>
 
 
-                <TodoList todos={todos} deleteTodo={deleteTodoHandler} toggleTodo={toggleTodoStatusHandler} editTodoTitle={editTodoTitleHandler} />
+
+
             </div>
         </div>
     )

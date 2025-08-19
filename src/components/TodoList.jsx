@@ -1,11 +1,15 @@
+import { useContext } from "react";
 import TodoListItem from "./TodoListItem";
+import { TodoContext } from "../contexts/TodoContext";
 
-export default function TodoList({todos,deleteTodo,toggleTodo,editTodoTitle}) {
+export default function TodoList() {
+
+    const {todos}=useContext(TodoContext)
     // console.log(todos);
     
     return (
         <ul className="list-reset">
-            {todos.map((todo,index)=><TodoListItem key={index} todo={todo} deleteTodo={deleteTodo} toggleTodo={toggleTodo} editTodoTitle={editTodoTitle}/>)}
+            {todos.map((todo,index)=><TodoListItem key={index} todo={todo} />)}
             {/* <TodoListItem/>
             <TodoListItem/> */}
             {/* <li className="relative flex items-center justify-between px-2 py-6 border-b">

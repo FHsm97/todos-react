@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import TodoList from "./TodoList";
 import { v4 as uuidv4 } from 'uuid';
 import NewTodoInput from "./NewTodoInput";
 import { toast } from "react-toastify";
+import todoReducer from "../reducers/todoReducer";
 
 export default function Todos() {
 
-    const [todos, setTodos] = useState([])
+    // const [todos, setTodos] = useState([])
+
+    const [todos, todoDispatcher] = useReducer(todoReducer, [])
 
 
 
@@ -14,12 +17,6 @@ export default function Todos() {
 
     const addNewTodoHandler = async (todoTitle) => {
 
-        let newTodo =
-        {
-            title: todoTitle,
-            status: false
-        }
-            ;
         // setTodos(newTodos)
 
         // localStorage.setItem('todos-list', JSON.stringify(newTodos)) //set in localstorage
@@ -30,18 +27,21 @@ export default function Todos() {
             let res = await fetch("https://68a198366f8c17b8f5da3e00.mockapi.io/todos", {
                 method: 'post',
                 headers: { 'content-type': 'application/json' },
-                body: JSON.stringify(newTodo)
+                body: JSON.stringify({
+                    title: todoTitle,
+                    status: false
+                })
             })
 
             let todoData = await res.json();
 
             // console.log(res);
 
-            setTodos([
-                ...todos,
-                todoData
-            ])
-
+            todoDispatcher({
+                type: 'add',
+                id: todoData?.id,
+                title: todoData?.title
+            })
 
             toast.success("todo created!")
 
@@ -65,25 +65,25 @@ export default function Todos() {
             body: JSON.stringify()
         })
         if (res.ok) {
-            let newTodos = todos.filter((todoItem) => {
-                return todo.id != todoItem.id
 
+            todoDispatcher({
+                type:'delete',
+                id:todo.id
             })
-            // console.log(newTodos);
-            setTodos(newTodos);
+            
 
             toast.success('the todo deleted!')
 
         }
         // show me an error
-        let message=await res.json();
+        let message = await res.json();
         toast.error(message)
-        
+
 
     }
 
 
-    
+
     const toggleTodoStatusHandler = async (todo) => {
 
         let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
@@ -95,21 +95,15 @@ export default function Todos() {
         })
 
         if (res.ok) {
-            let newTodos = todos.map((todoItem) => {
-                if (todo.id == todoItem.id) {
-                    todoItem.status = !todoItem.status
 
-
-                }
-                return todoItem;
+            todoDispatcher({
+                type:'toggle-satus',
+                id:todo.id
             })
 
-            // console.log(newTodos);
-
-            setTodos(newTodos);
         }
         // show me an error
-        
+
     }
 
 
@@ -124,10 +118,10 @@ export default function Todos() {
 
 
 
-    const editTodoTitleHandler = async(todo, newTitleValue) => {
+    const editTodoTitleHandler = async (todo, newTitleValue) => {
 
 
-        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todo/${todo?.id}`, {
+        let res = await fetch(`https://68a198366f8c17b8f5da3e00.mockapi.io/todos/${todo?.id}`, {
             method: 'put',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
@@ -136,23 +130,18 @@ export default function Todos() {
         })
 
         if (res.ok) {
-            let newTodos = todos.map((todoItem) => {
-            if (todo.id == todoItem.id) {
-                todoItem.title = newTitleValue
-
-
-            }
-            return todoItem;
-        })
-
-        setTodos(newTodos);
+            todoDispatcher({
+                type:'edit-title',
+                id:todo.id,
+                newTiltle:newTitleValue
+            })
             
         }
         //show me an error
 
-        
 
-        
+
+
     }
 
 
@@ -164,7 +153,10 @@ export default function Todos() {
 
             // console.log(todos);
             if (res.ok) {
-                setTodos(todos)
+                todoDispatcher({
+                    type:'initial-todos',
+                    todos
+                })
             }
 
 

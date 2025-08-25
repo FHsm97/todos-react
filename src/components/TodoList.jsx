@@ -4,7 +4,7 @@ import { TodoContext } from "../contexts/TodoContext";
 
 export default function TodoList() {
 
-    const {todos}=useContext(TodoContext)
+    const todos=useContext(TodoContext)
     // console.log(todos);
     
     return (

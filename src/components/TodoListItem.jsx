@@ -2,13 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import DeleteIcon from "./icons/DeleteIcon";
 import EditIcon from "./icons/EditIcon";
 import { toast } from "react-toastify";
-import { TodoContext } from "../contexts/TodoContext";
+import { TodoContext, TodoDispatcherContext } from "../contexts/TodoContext";
 
 export default function TodoListItem({ todo }) {
     const [editMode, setEditMode] = useState(false);
-    const {todoDispatcher}=useContext(TodoContext)
+    const todoDispatcher=useContext(TodoDispatcherContext)
 
-    
+
     const editTodoHandler=(event)=>{
         if (event.key=='Enter') {
             // console.log(event.target.value);

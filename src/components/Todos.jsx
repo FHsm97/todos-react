@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import NewTodoInput from "./NewTodoInput";
 import { toast } from "react-toastify";
 import todoReducer from "../reducers/todoReducer";
-import { TodoContext } from "../contexts/TodoContext";
+import { TodoContext, TodoDispatcherContext } from "../contexts/TodoContext";
 
 export default function Todos() {
 
@@ -107,11 +107,11 @@ export default function Todos() {
 
                 <NewTodoInput addTodo={addNewTodoHandler} />
 
-                <TodoContext.Provider value={{
-                    todos,
-                    todoDispatcher
-                }}>
-                    <TodoList />
+                <TodoContext.Provider value={todos}>
+                    <TodoDispatcherContext.Provider value={todoDispatcher}>
+                        <TodoList />
+                    </TodoDispatcherContext.Provider>
+
                 </TodoContext.Provider>
 
 
